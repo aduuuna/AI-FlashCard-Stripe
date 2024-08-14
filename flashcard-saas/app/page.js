@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  SignedOut,
-  Button,
-  SignedIn,
-  UserButton,
-  Box,
-  Grid,
-} from "@mui/material";
+import Image from "next/image";
+import { AppBar, Toolbar, Typography, Button, Box, Grid } from "@mui/material";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
+import getStripe from "../utils/get-stripe";
 
 export default function Home() {
   const handleSubmit = async () => {
@@ -33,20 +27,20 @@ export default function Home() {
     <Box sx={{ textAlign: "center", my: 4 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
+          <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
             Flashcard SaaS
           </Typography>
-          {/* <SignedOut>
+          <SignedOut>
             <Button color="inherit" href="/sign-in">
-              Login
+              Sign In
             </Button>
             <Button color="inherit" href="/sign-up">
               Sign Up
             </Button>
-          </SignedOut> */}
-          {/* <SignedIn>
+          </SignedOut>
+          <SignedIn>
             <UserButton />
-          </SignedIn> */}
+          </SignedIn>
         </Toolbar>
       </AppBar>
       <Typography variant="h2" component="h1" gutterBottom>
@@ -78,9 +72,7 @@ export default function Home() {
         <Typography variant="h4" component="h2" gutterBottom>
           Pricing
         </Typography>
-        <Grid container spacing={4} justifyContent="center">
-          {/* Pricing plans */}
-        </Grid>
+        <Grid container spacing={4} justifyContent="center"></Grid>
       </Box>
     </Box>
   );

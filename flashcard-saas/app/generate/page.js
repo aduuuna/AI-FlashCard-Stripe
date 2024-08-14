@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import {
   Container,
   TextField,
@@ -13,12 +14,17 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Generate() {
-  const [text, setText] = useState("");
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [flipped, setFlipped] = useState([]);
   const [flashcards, setFlashcards] = useState([]);
-  const [setName, setSetName] = useState("");
+  const [name, setName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [open, setOpen] = useState("");
+  const [text, setText] = useState("");
+  const router = useRouter();
 
   const handleOpenDialog = () => setDialogOpen(true);
   const handleCloseDialog = () => setDialogOpen(false);
@@ -61,13 +67,10 @@ export default function Generate() {
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        const updatedSets = [
-          ...(userData.flashcardSets || []),
-          { name: setName },
-        ];
+        const updatedSets = [...(userData.flashcardSets || []), { name: name }];
         batch.update(userDocRef, { flashcardSets: updatedSets });
       } else {
-        batch.set(userDocRef, { flashcardSets: [{ name: setName }] });
+        batch.set(userDocRef, { flashcardSets: [{ name: name }] });
       }
 
       const setDocRef = doc(collection(userDocRef, "flashcardSets"), setName);
@@ -77,11 +80,26 @@ export default function Generate() {
 
       alert("Flashcards saved successfully!");
       handleCloseDialog();
-      setSetName("");
+      setName("");
     } catch (error) {
       console.error("Error saving flashcards:", error);
       alert("An error occurred while saving flashcards. Please try again.");
     }
+  };
+
+  const handleCardFlip = (id) => {
+    setFlipped((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (

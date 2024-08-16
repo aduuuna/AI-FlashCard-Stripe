@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const systemPrompt = `
-You are an expert flashcard creator, specializing in generating concise, educational flashcards from given text. Follow these guidelines strictly:
+const systemPrompt = `You are an expert flashcard creator, specializing in generating concise, educational flashcards from given text. Follow these guidelines strictly:
 
 1. Create exactly 10 flashcards from the provided text.
 2. Each flashcard should have a 'front' and 'back' side.
@@ -27,55 +27,49 @@ Return the flashcards in this exact JSON format:
   ]
 }
 
-Ensure all JSON is valid and properly formatted.`;
+Ensure all JSON is valid and properly formatted.
+IMPORTANT: Your response must be ONLY the JSON object. Do not include any other text before or after the JSON.`;
 
 export async function POST(req) {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
+  const data = await req.text();
   try {
-    const data = await req.text();
-
-    if (!data) {
-      throw new Error("No input data provided");
-    }
-
-    const completion = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: data },
-      ],
-      model: "gpt-3.5-turbo", // Changed to a more widely available model
-      response_format: { type: "json_object" },
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro-latest",
     });
 
-    const content = completion.choices[0]?.message?.content;
-    if (!content) {
-      throw new Error("No content in API response");
+    const prompt = `${systemPrompt}\n\nHere's the text to create flashcards from:\n${data}`;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    let text = response.text();
+
+    let jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      text = jsonMatch[0];
     }
 
-    const flashcards = JSON.parse(content);
+    // Parse the JSON response
+    let flashcards;
+    try {
+      flashcards = JSON.parse(text);
+    } catch (parseError) {
+      console.error("JSON parsing error:", parseError);
+      return NextResponse.json(
+        { error: "Invalid response format from AI" },
+        { status: 500 }
+      );
+    }
 
     if (!flashcards.flashcards || !Array.isArray(flashcards.flashcards)) {
-      throw new Error("Invalid flashcards format in API response");
-    }
-
-    return NextResponse.json(flashcards.flashcards);
-  } catch (error) {
-    console.error("Error in POST function:", error);
-
-    if (error instanceof OpenAI.APIError) {
-      console.error(
-        "OpenAI API Error:",
-        error.status,
-        error.message,
-        error.code
-      );
       return NextResponse.json(
-        { error: `OpenAI API Error: ${error.message}` },
-        { status: error.status || 500 }
+        { error: "Invalid flashcards format" },
+        { status: 500 }
       );
     }
-
+    return NextResponse.json(flashcards.flashcards);
+  } catch (geminiError) {
+    console.error("Gemini AI API error:", geminiError);
     return NextResponse.json(
       { error: "Failed to generate flashcards" },
       { status: 500 }

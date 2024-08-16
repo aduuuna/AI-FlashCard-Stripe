@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { db } from "../../firebase";
 import {
   Container,
   TextField,
@@ -21,7 +22,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { writeBatch } from "firebase/firestore";
-import { collection, doc, getDoc, collecetion } from "firebase/firestore";
+import { doc, getDoc, collection } from "firebase/firestore";
 
 export default function Generate() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -34,12 +35,31 @@ export default function Generate() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    fetch("api/generate", {
-      method: "POST",
-      body: text,
-    })
-      .then((res) => res.json())
-      .then((data) => setFlashcards(data));
+    try {
+      const response = await fetch("api/generate", {
+        method: "POST",
+        body: text,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new TypeError("Oops, we haven't got JSON!");
+      }
+
+      const data = await response.json();
+      setFlashcards(data);
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      if (error instanceof SyntaxError) {
+        console.error("Response was not valid JSON");
+      }
+      // You might want to set an error state here and display it to the user
+      // setError("Failed to generate flashcards. Please try again.");
+    }
   };
 
   const saveFlashcards = async () => {
@@ -144,7 +164,7 @@ export default function Generate() {
                             transformStyle: "preserve-3d",
                             position: "relative",
                             width: "100%",
-                            height: "200px",
+                            height: "250px",
                             boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                             transform: flipped[index]
                               ? "rotateY(180deg)"

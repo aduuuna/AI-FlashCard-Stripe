@@ -1,6 +1,13 @@
 import React from "react";
-import Image from "next/image";
-import { AppBar, Toolbar, Typography, Button, Box, Grid } from "@mui/material";
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Grid,
+} from "@mui/material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 import getStripe from "../utils/get-stripe";
@@ -24,8 +31,8 @@ export default function Home() {
   };
 
   return (
-    <Box sx={{ textAlign: "center", my: 4 }}>
-      <AppBar position="static">
+    <Container maxWidth="100vw" sx={{ textAlign: "center", my: 4 }}>
+      <AppBar position="static" width="100%">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
             Flashcard SaaS
@@ -57,9 +64,7 @@ export default function Home() {
       >
         Get Started
       </Button>
-      <Button variant="outlined" color="primary" sx={{ mt: 2 }}>
-        Learn More
-      </Button>
+
       <Box sx={{ my: 6 }}>
         <Typography variant="h4" component="h2" gutterBottom>
           Features
@@ -74,6 +79,6 @@ export default function Home() {
         </Typography>
         <Grid container spacing={4} justifyContent="center"></Grid>
       </Box>
-    </Box>
+    </Container>
   );
 }

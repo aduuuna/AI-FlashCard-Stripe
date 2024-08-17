@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Container, CircularProgress, Typography, Box } from "@mui/material";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "next/navigation";
 import getStripe from "../../utils/get-stripe";
 
 const ResultPage = () => {

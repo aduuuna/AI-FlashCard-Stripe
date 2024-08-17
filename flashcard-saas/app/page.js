@@ -12,6 +12,7 @@ import {
   CardContent,
   CardActions,
   Avatar,
+  IconButton,
 } from "@mui/material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Head from "next/head";
@@ -20,19 +21,35 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ShareIcon from "@mui/icons-material/Share";
 import SpeedIcon from "@mui/icons-material/Speed";
 
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import GitHubIcon from "@mui/icons-material/GitHub";
+
 import getStripe from "../utils/get-stripe";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
+
   const handleSubmit = async () => {
     const checkoutSession = await fetch("/api/checkout_sessions", {
       method: "POST",
       headers: { origin: "http://localhost:3000" },
     });
+
     const checkoutSessionJson = await checkoutSession.json();
 
+    if (checkoutSession.statusCode === 500) {
+      console.error(checkoutSession.message);
+      return;
+    }
+
     const stripe = await getStripe();
+
     const { error } = await stripe.redirectToCheckout({
       sessionId: checkoutSessionJson.id,
     });
@@ -43,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container width="lg">
       <Head>
         <title>Flashcard SaaS</title>
         <meta name="description" content="Create Flashcard from your text" />
@@ -85,7 +102,7 @@ export default function Home() {
           sx={{ mt: 4, mr: 2 }}
           href="/generate"
         >
-          Get Started
+          Get Started Now
         </Button>
         <Button
           variant="outlined"
@@ -174,7 +191,7 @@ export default function Home() {
             },
             {
               title: "Pro",
-              price: "$5/month",
+              price: "$10/month",
               features: [
                 "Unlimited flashcards",
                 "Priority support",
@@ -185,7 +202,7 @@ export default function Home() {
             },
             {
               title: "Team",
-              price: "$15/month",
+              price: "$25/month",
               features: [
                 "Everything in Pro",
                 "Team management",
@@ -223,6 +240,7 @@ export default function Home() {
                   <Button
                     variant={plan.highlighted ? "contained" : "outlined"}
                     color="primary"
+                    onClick={handleSubmit}
                   >
                     Choose Plan
                   </Button>
@@ -278,25 +296,15 @@ export default function Home() {
           ))}
         </Grid>
       </Box>
-      <Box sx={{ my: 8, textAlign: "center" }}>
-        <Typography variant="h4" component="h2" gutterBottom>
-          Ready to boost your learning?
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{ mt: 2 }}
-          href="/sign-up"
-        >
-          Get Started Now
-        </Button>
-      </Box>
 
-      {/* Footer */}
       <Box
         component="footer"
-        sx={{ mt: 8, py: 4, borderTop: 1, borderColor: "divider" }}
+        sx={{
+          mt: 8,
+          py: 4,
+          borderTop: 1,
+          borderColor: "divider",
+        }}
       >
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
@@ -309,25 +317,73 @@ export default function Home() {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
-              Quick Links
+              Contact Us
             </Typography>
-            <Typography variant="body2">
-              <Button color="inherit" href="/about">
-                About
-              </Button>
-              <Button color="inherit" href="/contact">
-                Contact
-              </Button>
-              <Button color="inherit" href="/privacy">
-                Privacy Policy
-              </Button>
-            </Typography>
+
+            <Button
+              color="inherit"
+              startIcon={<EmailIcon />}
+              href="mailto:owusujoyansah@gmail.com"
+            >
+              Email Us
+            </Button>
+            <Button
+              color="inherit"
+              startIcon={<PhoneIcon />}
+              href="tel:+233541035604"
+            >
+              Call Us
+            </Button>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="h6" gutterBottom>
               Connect With Us
             </Typography>
-            {/* Add social media icons here */}
+            <IconButton
+              color="primary"
+              aria-label="LinkedIn"
+              href="https://www.linkedin.com/in/joy-owusu-ansah/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkedInIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="Instagram"
+              href="https://www.instagram.com/kwame_ayew_/?next=%2F"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="Facebook"
+              href="https://web.facebook.com/profile.php?id=100074871207486"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FacebookIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="Twitter"
+              href="https://x.com/kwame_ayew_"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <TwitterIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="GitHub"
+              href="https://github.com/aduuuna"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GitHubIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </Box>

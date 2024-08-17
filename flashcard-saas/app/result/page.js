@@ -1,3 +1,10 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { Container, CircularProgress, Typography, Box } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
+import getStripe from "../../utils/get-stripe";
+
 const ResultPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -30,7 +37,7 @@ const ResultPage = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
+      <Container maxWidth="100vw" sx={{ textAlign: "center", mt: 4 }}>
         <CircularProgress />
         <Typography variant="h6" sx={{ mt: 2 }}>
           Loading...

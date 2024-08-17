@@ -9,6 +9,8 @@ import {
   CardActionArea,
   CardContent,
   Card,
+  Box,
+  Button,
 } from "@mui/material";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -50,7 +52,23 @@ export default function Flashcard() {
           console.log("Current set in map:", set);
           return (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                  borderRadius: "12px",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 6px 25px rgba(0,0,0,0.15)",
+                  },
+                }}
+              >
                 <CardActionArea onClick={() => handleCardClick(set)}>
                   <CardContent>
                     {/* <Typography variant="h6">{JSON.stringify(set)}</Typography> */}

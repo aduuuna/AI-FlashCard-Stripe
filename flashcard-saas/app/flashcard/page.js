@@ -5,11 +5,12 @@ import { db } from "../../firebase";
 import {
   Container,
   Typography,
-  Box,
   Grid,
   Card,
   CardActionArea,
   CardContent,
+  Box,
+  Button,
 } from "@mui/material";
 import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
@@ -51,10 +52,27 @@ export default function Flashcard() {
   }
   return (
     <Container maxWidth="100vw">
+     
       <Grid container spacing={3} sx={{ mt: 4 }}>
         {flashcards.map((flashcard, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
+            <Card
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+
+                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                borderRadius: "12px",
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "translateY(-5px)",
+                  boxShadow: "0 6px 25px rgba(0,0,0,0.15)",
+                },
+              }}
+            >
               <CardActionArea onClick={() => handleCardClick(index)}>
                 <CardContent>
                   <Box
@@ -66,6 +84,7 @@ export default function Flashcard() {
                         position: "relative",
                         width: "100%",
                         height: "250px",
+                        backgroundColor: " #f6fcff",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                         transform: flipped[index]
                           ? "rotateY(180deg)"

@@ -24,8 +24,5 @@
     "react-dom": "^18.2.0",
     "stripe": "^16.7.0"
   },
-  "devDependencies": {
-    // "eslint": "^8",
-    // "eslint-config-next": "13.5.6"
-  }
+  "devDependencies": {}
 }

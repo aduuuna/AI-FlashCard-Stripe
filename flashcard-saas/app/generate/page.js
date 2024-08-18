@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+
 import { db } from "../../firebase";
 import {
   Container,
@@ -36,7 +36,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 export default function Generate() {
-  const { isLoaded, isSignedIn, user } = useUser();
   const [flipped, setFlipped] = useState([]);
   const [flashcards, setFlashcards] = useState([]);
   const [name, setName] = useState("");
@@ -333,13 +332,14 @@ export default function Generate() {
           <DialogContentText>
             1. Enter your text in the provided area.
             <br />
-            2. Click "GENERATE FLASHCARDS" to create flashcards from your text.
+            2. Click &lsquo;GENERATE FLASHCARDS&rsquo; to create flashcards from
+            your text.
             <br />
             3. Review the generated flashcards.
             <br />
-            4. Click "Save Flashcards" to save your set.
+            4. Click &lsquo;Save Flashcards&rsquo; to save your set.
             <br />
-            5. Enter a name for your flashcard set and click "Save".
+            5. Enter a name for your flashcard set and click &lsquo;Save&rsquo;.
             <br />
           </DialogContentText>
         </DialogContent>

@@ -263,21 +263,19 @@ export default function Home() {
             {
               name: "Alex Johnson",
               role: "Student",
-              quote:
-                "Flashcard SaaS has revolutionized my study routine. I've improved my grades significantly!",
+              quote: `Flashcard SaaS has revolutionized my study routine. I've improved my grades significantly!`,
             },
             {
               name: "Sarah Lee",
               role: "Teacher",
-              quote:
-                "As an educator, I find this tool invaluable for creating engaging study materials for my students.",
+              quote: `As an educator, I find this tool invaluable for creating engaging study materials for my students.`,
             },
           ].map((testimonial, index) => (
             <Grid item xs={12} sm={6} key={index}>
               <Card>
                 <CardContent>
                   <Typography variant="body1" paragraph>
-                    "{testimonial.quote}"
+                    {testimonial.quote}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Avatar sx={{ mr: 2 }}>{testimonial.name[0]}</Avatar>

@@ -191,7 +191,7 @@ export default function Home() {
             },
             {
               title: "Pro",
-              price: "$10/month",
+              price: "$5/month",
               features: [
                 "Unlimited flashcards",
                 "Priority support",
@@ -202,7 +202,7 @@ export default function Home() {
             },
             {
               title: "Team",
-              price: "$25/month",
+              price: "$5/month",
               features: [
                 "Everything in Pro",
                 "Team management",

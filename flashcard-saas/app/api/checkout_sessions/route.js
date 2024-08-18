@@ -29,20 +29,7 @@ export async function POST(req) {
           },
           quantity: 1,
         },
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: "Team subscription",
-            },
-            unit_amount: formatAmountForStripe(15, "usd"), // $10.00
-            recurring: {
-              interval: "month",
-              interval_count: 1,
-            },
-          },
-          quantity: 1,
-        },
+        
       ],
       success_url: `${req.headers.get(
         "Referer"

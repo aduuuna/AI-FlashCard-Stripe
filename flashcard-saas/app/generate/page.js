@@ -163,7 +163,7 @@ export default function Generate() {
           activeStep={activeStep}
           alternativeLabel
           sx={{ mb: 4 }}
-          orientation={isSmallScreen ? "vertical" : "horizontal"}
+          orientation={isSmallScreen ? "horizontal" : "horizontal"}
         >
           {steps.map((label) => (
             <Step key={label}>

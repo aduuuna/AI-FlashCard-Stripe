@@ -108,7 +108,7 @@ export default function Home() {
           variant="outlined"
           color="primary"
           sx={{ mt: 4 }}
-          href="/flashcards"
+          href="https://youtu.be/c06EtlWDUGc?si=kGzbQ77OEDrIFsQu"
         >
           View Demo
         </Button>

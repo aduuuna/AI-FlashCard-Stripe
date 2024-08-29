@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { Container, CircularProgress, Typography, Box } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import getStripe from "../../utils/get-stripe";
 
 const ResultPage = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const session_id = searchParams.get("session_id");
   const [loading, setLoading] = useState(true);

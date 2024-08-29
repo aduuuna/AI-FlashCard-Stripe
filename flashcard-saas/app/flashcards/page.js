@@ -9,8 +9,6 @@ import {
   CardActionArea,
   CardContent,
   Card,
-  Box,
-  Button,
 } from "@mui/material";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";

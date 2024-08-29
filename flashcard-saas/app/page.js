@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <Container width="lg">
+    <Container maxWidth="lg">
       <Head>
         <title>Flashcard SaaS</title>
         <meta name="description" content="Create Flashcard from your text" />
@@ -200,16 +200,16 @@ export default function Home() {
               ],
               highlighted: true,
             },
-            {
-              title: "Team",
-              price: "$5/month",
-              features: [
-                "Everything in Pro",
-                "Team management",
-                "Analytics",
-                "API access",
-              ],
-            },
+            // {
+            //   title: "Team",
+            //   price: "$5/month",
+            //   features: [
+            //     "Everything in Pro",
+            //     "Team management",
+            //     "Analytics",
+            //     "API access",
+            //   ],
+            // },
           ].map((plan, index) => (
             <Grid item xs={12} sm={4} key={index}>
               <Card

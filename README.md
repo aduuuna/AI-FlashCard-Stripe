@@ -6,7 +6,7 @@ AI-Powered Flashcard Generator is a web application that allows users to create 
 
 ## Features
 
-- **AI-Generated Flashcards**: Utilizes OpenAI's GPT models to create relevant and accurate flashcards from user-provided text.
+- **AI-Generated Flashcards**: Utilizes Gemini API's models to create relevant and accurate flashcards from user-provided text.
 - **User Authentication**: Secure sign-up and login functionality powered by Clerk.
 - **Database Storage**: Firebase integration for storing user data and flashcard sets.
 - **Payment Integration**: Stripe payment processing for premium features or subscriptions.
@@ -18,7 +18,7 @@ AI-Powered Flashcard Generator is a web application that allows users to create 
 - **Backend**: Node.js
 - **Authentication**: Clerk
 - **Database**: Firebase
-- **AI Integration**: OpenAI API
+- **AI Integration**: Gemini API
 - **Payment Processing**: Stripe
 - **Deployment**: Vercel
 
@@ -29,7 +29,7 @@ AI-Powered Flashcard Generator is a web application that allows users to create 
 - Node.js (v14 or later)
 - npm or yarn
 - Firebase account
-- OpenAI API key
+- Gemini API key
 - Stripe account
 - Clerk account
 
@@ -43,7 +43,7 @@ Create a `.env.local` file in the root directory and add the following:
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
-OPENAI_API_KEY=your_openai_api_key
+GEMINI_API_KEY=your_openai_api_key
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 
@@ -66,7 +66,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Acknowledgements
 
-- OpenAI for providing the AI model
+- Gemini API for providing the AI model
 - Clerk for authentication services
 - Firebase for database solutions
 - Stripe for payment processing

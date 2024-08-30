@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="100vw">
       <Head>
         <title>Flashcard SaaS</title>
         <meta name="description" content="Create Flashcard from your text" />
@@ -96,14 +96,26 @@ export default function Home() {
         <Typography variant="h6" component="h2" gutterBottom>
           Create, study, and share flashcards effortlessly
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4, mr: 2 }}
-          href="/generate"
-        >
-          Get Started Now
-        </Button>
+        <SignedIn>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 4, mr: 2 }}
+            href="/generate"
+          >
+            Get Started Now
+          </Button>
+        </SignedIn>
+        <SignedOut>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 4, mr: 2 }}
+            href="/sign-in"
+          >
+            Sign In to Get Started
+          </Button>
+        </SignedOut>
         <Button
           variant="outlined"
           color="primary"

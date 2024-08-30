@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { db } from "../../firebase";
 import {
@@ -29,10 +29,15 @@ import {
   IconButton,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { writeBatch } from "firebase/firestore";
-import { doc, getDoc, collection } from "firebase/firestore";
+import { useAuth } from "@clerk/nextjs";
+import {
+  writeBatch,
+  doc,
+  getDoc,
+  collection,
+  setDoc,
+} from "firebase/firestore";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import InfoIcon from "@mui/icons-material/Info";
 import { useMediaQuery, useTheme } from "@mui/material";
 
 export default function Generate() {
@@ -46,10 +51,15 @@ export default function Generate() {
   const [error, setError] = useState("");
   const [showTutorial, setShowTutorial] = useState(true);
   const router = useRouter();
+  const { userId } = useAuth();
 
   const steps = ["Enter Text", "Generate Flashcards", "Review and Save"];
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleSave = () => {
+    saveFlashcards(userId);
+  };
 
   useEffect(() => {
     const tutorialSeen = localStorage.getItem("tutorialSeen");
@@ -62,26 +72,33 @@ export default function Generate() {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("api/generate", {
+      const response = await fetch("/api/generate", {
         method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+        },
         body: text,
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new TypeError("Oops, we haven't got JSON!");
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
       }
 
       const data = await response.json();
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid response format");
+      }
+
       setFlashcards(data);
       setActiveStep(1);
     } catch (error) {
       console.error("Error in handleSubmit:", error);
-      setError("Failed to generate flashcards. Please try again.");
+      setError(
+        error.message || "Failed to generate flashcards. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -92,37 +109,44 @@ export default function Generate() {
       setError("Please enter a name for your flashcard set.");
       return;
     }
+    if (!userId) {
+      setError("You must be logged in to save flashcards.");
+      return;
+    }
     setLoading(true);
     try {
-      const batch = writeBatch(db);
-      const userDocRef = doc(collection(db, "users"), user.id);
+      const userDocRef = doc(collection(db, "users"), userId);
       const docSnap = await getDoc(userDocRef);
 
+      let collections = [];
       if (docSnap.exists()) {
-        const collections = docSnap.data().flashcards || [];
-        if (collections.find((f) => f.name === name)) {
+        collections = docSnap.data().flashcards || [];
+        if (collections.includes(name)) {
           setError("A flashcard set with that name already exists.");
+          setLoading(false);
           return;
-        } else {
-          collections.push(name);
-          batch.set(userDocRef, { flashcards: collections }, { merge: true });
         }
-      } else {
-        batch.set(userDocRef, { flashcards: [{ name }] });
       }
 
-      const colRef = collection(userDocRef, name);
-      flashcards.forEach((flashcard) => {
-        const cardDocRef = doc(colRef);
-        batch.set(cardDocRef, flashcard);
-      });
+      collections.push(name);
+      await setDoc(userDocRef, { flashcards: collections }, { merge: true });
 
-      await batch.commit();
+      const colRef = collection(userDocRef, name);
+      const batchSize = 450; // Firestore limit is 500, leaving some room for safety
+      for (let i = 0; i < flashcards.length; i += batchSize) {
+        const batch = writeBatch(db);
+        flashcards.slice(i, i + batchSize).forEach((flashcard) => {
+          const cardDocRef = doc(colRef);
+          batch.set(cardDocRef, flashcard);
+        });
+        await batch.commit();
+      }
+
       handleClose();
       router.push("/flashcards");
     } catch (error) {
       console.error("Error saving flashcards:", error);
-      setError("Failed to save flashcards. Please try again.");
+      setError(`Failed to save flashcards: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -239,6 +263,7 @@ export default function Generate() {
                             position: "relative",
                             width: "100%",
                             height: "250px",
+                            backgroundColor: " #f6fcff",
                             boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
                             transform: flipped[index]
                               ? "rotateY(180deg)"

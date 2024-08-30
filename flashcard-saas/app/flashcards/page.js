@@ -37,8 +37,8 @@ export default function Flashcard() {
     return <></>;
   }
 
-  const handleCardClick = (setName) => {
-    router.push(`/flashcard?id=${setName}`);
+  const handleCardClick = (set) => {
+    router.push(`/flashcard?id=${typeof set === "string" ? set : set.name}`);
   };
 
   console.log("Current flashcardSets state:", flashcardSets);
@@ -48,6 +48,7 @@ export default function Flashcard() {
       <Grid container spacing={3} sx={{ mt: 4 }}>
         {flashcardSets.map((set, index) => {
           console.log("Current set in map:", set);
+          const setName = typeof set === "string" ? set : set.name;
           return (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
@@ -69,8 +70,7 @@ export default function Flashcard() {
               >
                 <CardActionArea onClick={() => handleCardClick(set)}>
                   <CardContent>
-                    {/* <Typography variant="h6">{JSON.stringify(set)}</Typography> */}
-                    <Typography variant="h6">{set}</Typography>
+                    <Typography variant="h6">{setName}</Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>

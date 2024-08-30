@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="100vw">
+    <Box maxWidth="100vw">
       <Head>
         <title>Flashcard SaaS</title>
         <meta name="description" content="Create Flashcard from your text" />
@@ -397,6 +397,6 @@ export default function Home() {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 }
